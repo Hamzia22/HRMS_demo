@@ -1,0 +1,19 @@
+{
+  "name": "hrm-system-root",
+  "version": "1.0.0",
+  "description": "Human Resource Management (HRM) System Root",
+  "scripts": {
+    "dev:all": "npm run dev:all --prefix hrm-system",
+    "backend": "npm run backend --prefix hrm-system",
+    "backend:dev": "npm run backend:dev --prefix hrm-system",
+    "frontend": "npm run frontend --prefix hrm-system",
+    "frontend:build": "npm run frontend:build --prefix hrm-system",
+    "install:all": "npm run install:all --prefix hrm-system"
+  },
+  "keywords": [
+    "hrm",
+    "human-resources"
+  ],
+  "author": "",
+  "license": "ISC"
+}
