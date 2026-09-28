@@ -225,24 +225,40 @@ npm run dev
 - `DELETE /api/departments/:id` — Delete department *(Admin only, prevents deletion if employees assigned)*
 
 ### Attendance
-- `GET /api/attendance` — Query attendance logs (`?date=YYYY-MM-DD`, role-scoped)
-- `GET /api/attendance/today/summary` — Today's attendance counts (Present, Absent, Late, On Leave)
-- `GET /api/attendance/employee/:employeeId` — Historical logs for specific employee
+- `POST /api/attendance/check-in` — Employee daily check-in (authenticates identity, prevents duplicate check-in)
+- `POST /api/attendance/check-out` — Employee daily check-out (requires existing check-in, prevents duplicate check-out)
+- `GET  /api/attendance/today` — Retrieve today's check-in/out status for current user
+- `GET  /api/attendance/my-history` — Employee's personal attendance history
+- `GET  /api/attendance` — Query attendance logs (`?date=YYYY-MM-DD`, role-scoped)
+- `GET  /api/attendance/today/summary` — Today's attendance counts (Present, Absent, Late, On Leave)
+- `GET  /api/attendance/employee/:employeeId` — Historical logs for specific employee
 
 ### Leaves
-- `GET  /api/leaves` — Query leave applications (`?status=Pending|Approved|Rejected`)
-- `GET  /api/leaves/stats` — Leave counts (Total, Pending, Approved, Rejected)
-- `GET  /api/leaves/:id` — Get single leave request
-- `POST /api/leaves` — Submit new leave application
-- `PUT  /api/leaves/:id/status` — Update approval status (`Approved` or `Rejected`) *(Admin, HR, Manager)*
+- `GET    /api/leaves` — Query leave applications (`?status=Pending|Approved|Rejected`)
+- `GET    /api/leaves/stats` — Leave counts (Total, Pending, Approved, Rejected)
+- `GET    /api/leaves/:id` — Get single leave request
+- `POST   /api/leaves` — Submit new leave application
+- `PUT    /api/leaves/:id/status` — Update approval status (`Approved` or `Rejected`) *(Admin, HR, Manager)*
+- `DELETE /api/leaves/:id` — Cancel pending leave application *(Employee self, Admin)*
+
+### Payroll Management
+- `GET  /api/payroll` — List all monthly payroll records *(Admin, HR)*
+- `GET  /api/payroll/stats` — Monthly payroll summary stats (total payroll, processed, pending, paid) *(Admin, HR)*
+- `GET  /api/payroll/my` — Employee's personal monthly payroll & history *(Employee self)*
+- `GET  /api/payroll/:id` — Full payslip breakdown *(Admin, HR, Employee for own record)*
+- `POST /api/payroll/generate` — Batch generate or regenerate monthly payroll *(Admin, HR)*
+- `PUT  /api/payroll/:id` — Edit salary allowances, overtime, or deductions *(Admin, HR)*
+- `PUT  /api/payroll/:id/process` — Transition payroll status to `Processed` *(Admin, HR)*
+- `PUT  /api/payroll/:id/pay` — Mark payroll record as `Paid` *(Admin, HR)*
+- `GET  /api/payroll/salary/:employeeId` — Get base salary structure *(Admin, HR, Employee self)*
+- `PUT  /api/payroll/salary/:employeeId` — Update employee compensation structure *(Admin, HR)*
 
 ---
 
 ## Limitations of the Demo Implementation
 
 This project is a high-fidelity demonstration of HRM workflows and intentionally excludes enterprise production services:
-- **In-Memory Storage**: Demo records reset when the backend server process restarts. The modular `data/` layer is organized so a database ORM (such as Prisma or Mongoose) can be swapped in without modifying route controllers.
-- **Simplified Payroll & Taxes**: Payroll processing and tax withholdings are not included.
-- **Biometric / GPS Hardware**: Clock-in and check-out logs are represented through mock and scheduled sample data rather than external hardware integrations.
+- **In-Memory Storage**: Demo records reset when the backend server process restarts. The modular `data/` layer is organized so a database ORM (such as Prisma, PostgreSQL, or Mongoose) can be swapped in without modifying route controllers.
+- **Biometric / GPS Hardware**: Clock-in and check-out logs are represented through interactive web check-in/out and demo logs rather than physical biometric hardware.
 - **Third-Party Email / SMS**: Notification alerts are rendered in-app rather than via external SMTP providers.
 - **Local Authentication**: Uses lightweight JWT and bcrypt rather than enterprise SSO / Okta integrations.
